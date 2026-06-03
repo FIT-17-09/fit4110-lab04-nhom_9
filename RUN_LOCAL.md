@@ -1,92 +1,40 @@
-# RUN_LOCAL.md – Hướng dẫn chạy Lab 04
+# Chạy A7 Notification Service bằng Docker
 
-Tài liệu này giúp người khác clone repo sạch và chạy lại service trong Docker.
+Hướng dẫn này giúp bạn build và chạy ứng dụng cục bộ bằng Docker, đồng thời sử dụng Postman/Newman để kiểm thử API.
 
----
-
-## 1. Clone repo
-
+## Bước 1: Build Docker Image
+Chạy lệnh sau để tạo Docker image:
 ```bash
-git clone <repo-url>
-cd FIT4110_lab04_docker_packaging
+make build
+# Hoặc lệnh thuần: docker build -t fit4110/notification-service:lab04 .
 ```
 
----
-
-## 2. Cài dependencies cho Newman/Prism/Spectral
-
+## Bước 2: Chạy Docker Container
+Sau khi build xong, khởi động container:
 ```bash
-npm install
+make run
+# Hoặc lệnh thuần: docker run --rm --name fit4110-notify-lab04 -p 8000:8000 --env-file .env.example fit4110/notification-service:lab04
 ```
+*Lưu ý: Dịch vụ chạy dưới quyền non-root (appuser).*
 
----
-
-## 3. Build Docker image
-
-```bash
-docker build -t fit4110/iot-ingestion:lab04 .
-```
-
----
-
-## 4. Run container
-
-```bash
-docker run --rm \
-  --name fit4110-iot-lab04 \
-  -p 8000:8000 \
-  --env-file .env.example \
-  fit4110/iot-ingestion:lab04
-```
-
-Mở terminal khác, kiểm tra:
-
+## Bước 3: Kiểm tra trạng thái
+Mở trình duyệt hoặc dùng cURL gọi API `/health`:
 ```bash
 curl http://localhost:8000/health
 ```
+Bạn sẽ nhận được phản hồi `{ "status": "ok", "service": "notification-service" }`.
 
-Kết quả mong đợi:
-
-```json
-{
-  "status": "ok",
-  "service": "iot-ingestion",
-  "version": "0.4.0"
-}
-```
-
----
-
-## 5. Chạy Newman test trên container
-
+## Bước 4: Chạy Postman Newman Tests
+Kiểm tra API bằng các test case đã định nghĩa:
 ```bash
-npm run test:local
-```
-
-Report sinh tại:
-
-```text
-reports/newman-lab04-local.xml
-reports/newman-lab04-local.html
-```
-
----
-
-## 6. Dừng container
-
-Nếu không dùng `--rm` hoặc container còn chạy:
-
-```bash
-docker stop fit4110-iot-lab04
-```
-
----
-
-## 7. Lệnh nhanh
-
-```bash
-make build
-make run
 make test-docker
+# Hoặc: npm run test:local
+```
+
+Kết quả (report) sẽ được lưu trong thư mục `reports/`.
+
+## Bước 5: Tắt Container
+```bash
 make stop
+# Hoặc: docker stop fit4110-notify-lab04
 ```
