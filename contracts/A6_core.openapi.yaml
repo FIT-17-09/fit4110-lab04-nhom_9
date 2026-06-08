@@ -4,6 +4,9 @@ info:
   version: 1.0.0
   description: |
     Hợp đồng API mẫu cho A6. Cung cấp API để Notification (A7) lấy chi tiết cảnh báo.
+  contact:
+    name: API Support
+    email: support@campus.local
 servers:
   - url: http://localhost:4011
     description: Prism mock server

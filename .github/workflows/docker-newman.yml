@@ -35,13 +35,13 @@ jobs:
             fit4110/notification-service:lab04
 
       - name: Wait for service health
-        run: npx wait-on http://localhost:8000/health --timeout 30000
+        run: npx wait-on http://127.0.0.1:8000/health --timeout 30000
 
       - name: Start A6 Core Mock Server
         run: npm run mock:core &
         
       - name: Wait for Mock Server
-        run: npx wait-on http://localhost:4011/alerts/0196fb3d-4ad7-7d1e-9f49-5d5148d2babc --timeout 15000
+        run: npx wait-on http://127.0.0.1:4011/alerts/0196fb3d-4ad7-7d1e-9f49-5d5148d2babc --timeout 15000
 
       - name: Run Newman against Docker container
         run: npm run test:local
